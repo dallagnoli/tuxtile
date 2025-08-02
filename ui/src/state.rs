@@ -24,21 +24,6 @@ const MIN_WIDTH: u16 = 100;
 const MIN_HEIGHT: u16 = 25;
 const FLOAT_SIZE: u16 = 80;
 const CONFIRM_PROMPT_FLOAT_SIZE: u16 = 40;
-const TITLE: &str = concat!(" Linux Toolbox - ", env!("CARGO_PKG_VERSION"), " ");
-const ACTIONS_GUIDE: &str = "List of important tasks performed by commands' names:
-
-D  - disk modifications (ex. partitioning) (privileged)
-FI - flatpak installation
-FM - file modification
-I  - installation (privileged)
-K  - kernel modifications (privileged)
-MP - package manager actions
-SI - full system installation
-SS - systemd actions (privileged)
-RP - package removal
-
-P* - privileged *
-";
 
 pub struct AppState {
     /// Areas of tabs
@@ -112,7 +97,7 @@ impl AppState {
             .iter()
             .map(|tab| tab.name.len() + args.theme.tab_icon().len())
             .max()
-            .unwrap_or(22) as u16; // 22 is the length of "Linutil by Chris Titus" title
+            .unwrap_or(22) as u16; 
 
         let mut state = Self {
             areas: None,
@@ -198,12 +183,12 @@ impl AppState {
         match self.focus {
             Focus::Search => (
                 "Search bar",
-                shortcuts!(("Abort search", ["Esc", "CTRL-c"]), ("Search", ["Enter"])),
+                shortcuts!(("Abort search", ["Esc", "Ctrl + c"]), ("Search", ["Enter"])),
             ),
 
             Focus::List => {
                 let mut hints = Vec::new();
-                hints.push(Shortcut::new("Exit linutil", ["q", "CTRL-c"]));
+                hints.push(Shortcut::new("Exit TuxTile", ["q", "Ctrl + c"]));
 
                 if self.at_root() {
                     hints.push(Shortcut::new("Focus tab list", ["h", "Left"]));
@@ -230,8 +215,7 @@ impl AppState {
                 }
                 hints.extend(shortcuts!(
                     ("Next tab", ["Tab"]),
-                    ("Previous tab", ["Shift-Tab"]),
-                    ("Important actions guide", ["g"])
+                    ("Previous tab", ["Shift + Tab"]),
                 ));
 
                 ("Command list", hints.into_boxed_slice())
@@ -240,15 +224,14 @@ impl AppState {
             Focus::TabList => (
                 "Tab list",
                 shortcuts!(
-                    ("Exit linutil", ["q", "CTRL-c"]),
+                    ("Exit TuxTile", ["q", "Ctrl + c"]),
                     ("Focus action list", ["l", "Right", "Enter"]),
                     ("Select item above", ["k", "Up"]),
                     ("Select item below", ["j", "Down"]),
                     ("Next theme", ["t"]),
                     ("Previous theme", ["T"]),
                     ("Next tab", ["Tab"]),
-                    ("Previous tab", ["Shift-Tab"]),
-                    ("Important actions guide", ["g"]),
+                    ("Previous tab", ["Shift + Tab"]),
                     ("Multi-selection mode", ["v"]),
                 ),
             ),
@@ -297,13 +280,12 @@ impl AppState {
             bottom_right: " ",
             vertical_left: " ",
             vertical_right: " ",
-            horizontal_top: "*",
-            horizontal_bottom: "*",
+            horizontal_top: "-",
+            horizontal_bottom: "-",
         });
 
         let label = Paragraph::new(Line::from(vec![
-            Span::styled("Linutil ", Style::default().bold()),
-            Span::styled("by Chris Titus", Style::default().italic()),
+            Span::styled(" TuxTile ", Style::default().bold()),
         ]))
         .block(label_block)
         .centered();
@@ -399,19 +381,11 @@ impl AppState {
                         self.theme.dir_color(),
                     )
                     .patch_style(style)
-                } else {
-                    let left_content =
-                        format!("{}  {} {}", self.theme.cmd_icon(), node.name, indicator);
-                    let right_content = format!("{} ", node.task_list);
-                    let center_space = " ".repeat(
-                        chunks[1].width as usize - left_content.len() - right_content.len(),
-                    );
-                    Line::styled(
-                        format!("{}{}{}", left_content, center_space, right_content),
-                        self.theme.cmd_color(),
-                    )
-                    .patch_style(style)
-                }
+     } else {
+    let content = format!("{}  {} {}", self.theme.cmd_icon(), node.name, indicator);
+    Line::styled(content, self.theme.cmd_color())
+        .patch_style(style)
+}
             },
         ));
 
@@ -421,25 +395,12 @@ impl AppState {
             Style::new()
         };
 
-        let title = if self.multi_select {
-            &format!("{}[Multi-Select] ", TITLE)
-        } else {
-            TITLE
-        };
-
-        let bottom_title = "";
-
-        let task_list_title = Line::from(" Important Actions ").right_aligned();
-
         // Create the list widget with items
         let list = List::new(items)
             .highlight_style(style)
             .block(
                 Block::bordered()
                     .border_set(border::ROUNDED)
-                    .title(title)
-                    .title(task_list_title)
-                    .title_bottom(bottom_title),
             )
             .scroll_padding(1);
         frame.render_stateful_widget(list, chunks[1], &mut self.selection);
@@ -606,7 +567,6 @@ impl AppState {
             KeyCode::Tab => self.scroll_tab_down(),
             KeyCode::BackTab => self.scroll_tab_up(),
             KeyCode::Char('/') => self.enter_search(),
-            KeyCode::Char('g') | KeyCode::Char('G') => self.enable_task_list_guide(),
             KeyCode::Char('v') | KeyCode::Char('V') => self.toggle_multi_select(),
             KeyCode::Char('t') => self.theme.next(),
             KeyCode::Char('T') => self.theme.prev(),
@@ -780,7 +740,7 @@ impl AppState {
 
     fn enable_preview(&mut self) {
         if let Some(list_node) = self.get_selected_node() {
-            let preview_title = format!("[Preview] - {}", list_node.name.as_str());
+            let preview_title = format!(" Preview - {} ", list_node.name.as_str());
             let preview = FloatingText::from_command(&list_node.command, &preview_title, false);
             self.spawn_float(preview, FLOAT_SIZE, FLOAT_SIZE);
         }
@@ -790,18 +750,10 @@ impl AppState {
         if let Some(command_description) = self.get_selected_description() {
             if !command_description.is_empty() {
                 let description =
-                    FloatingText::new(command_description, "Command Description", true);
+                    FloatingText::new(command_description, " Command Description ", true);
                 self.spawn_float(description, FLOAT_SIZE, FLOAT_SIZE);
             }
         }
-    }
-
-    fn enable_task_list_guide(&mut self) {
-        self.spawn_float(
-            FloatingText::new(ACTIONS_GUIDE.to_string(), "Important Actions Guide", true),
-            FLOAT_SIZE,
-            FLOAT_SIZE,
-        );
     }
 
     fn get_selected_item_type(&self) -> SelectedItem {

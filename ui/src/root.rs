@@ -15,7 +15,7 @@ pub fn check_root_status(bypass_root: bool) -> Option<FloatingText<'static>> {
 
     Uid::effective().is_root().then_some(FloatingText::new(
         ROOT_WARNING.into(),
-        "Root User Warning",
+        " Root User Warning ",
         true,
     ))
 }

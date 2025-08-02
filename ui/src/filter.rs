@@ -101,7 +101,7 @@ impl Filter {
     pub fn draw_searchbar(&self, frame: &mut Frame, area: Rect, theme: &Theme) {
         //Set the search bar text (If empty use the placeholder)
         let display_text = if !self.in_search_mode && self.search_input.is_empty() {
-            Span::raw("Press / to search")
+            Span::raw(" Press / to search")
         } else {
             let input_text = self.search_input.iter().collect::<String>();
             Span::styled(input_text, Style::default().fg(theme.focused_color()))

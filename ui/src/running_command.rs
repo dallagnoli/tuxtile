@@ -49,19 +49,19 @@ impl FloatContent for RunningCommand {
             // Display a block indicating the command is running
             Block::bordered()
                 .border_set(border::ROUNDED)
-                .title_top(Line::from("Running the command....").centered())
+                .title_top(Line::from(" Running the command... ").centered())
                 .title_style(Style::default().reversed())
-                .title_bottom(Line::from("Press Ctrl-C to KILL the command"))
+                .title_bottom(Line::from(" Press 'Ctrl + c' to KILL the command "))
         } else {
             // Display a block with the command's exit status
             let title_line = if self.get_exit_status().success() {
                 Line::styled(
-                    "SUCCESS! Press <ENTER> to close this window",
+                    " SUCCESS! Press 'Enter' to close this window ",
                     Style::default().fg(theme.success_color()).reversed(),
                 )
             } else {
                 Line::styled(
-                    "FAILED! Press <ENTER> to close this window",
+                    " FAILED! Press 'Enter' to close this window ",
                     Style::default().fg(theme.fail_color()).reversed(),
                 )
             };
@@ -144,8 +144,8 @@ impl FloatContent for RunningCommand {
                 "Finished command",
                 shortcuts!(
                     ("Close window", ["Enter", "q"]),
-                    ("Scroll up", ["Page up"]),
-                    ("Scroll down", ["Page down"]),
+                    ("Scroll up", ["Page Up"]),
+                    ("Scroll down", ["Page Down"]),
                     ("Save log", ["l"]),
                 ),
             )
@@ -153,9 +153,9 @@ impl FloatContent for RunningCommand {
             (
                 "Running command",
                 shortcuts!(
-                    ("Kill the command", ["CTRL-c"]),
-                    ("Scroll up", ["Page up"]),
-                    ("Scroll down", ["Page down"]),
+                    ("Kill the command", ["Ctrl + c"]),
+                    ("Scroll up", ["Page Up"]),
+                    ("Scroll down", ["Page Down"]),
                 ),
             )
         }
@@ -306,7 +306,7 @@ impl RunningCommand {
         let mut log_path = std::env::temp_dir();
         let date_format = format_description!("[year]-[month]-[day]-[hour]-[minute]-[second]");
         log_path.push(format!(
-            "linutil_log_{}.log",
+            "tuxtile_log_{}.log",
             OffsetDateTime::now_local()
                 .unwrap_or(OffsetDateTime::now_utc())
                 .format(&date_format)

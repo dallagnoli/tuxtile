@@ -1,5 +1,5 @@
 [package]
-name = "tuxtile_xtask"
+name = "xtask"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

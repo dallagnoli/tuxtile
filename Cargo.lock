@@ -1133,13 +1133,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tuxtile_xtask"
-version = "25.7.18"
-dependencies = [
- "tuxtile_core",
-]
-
-[[package]]
 name = "unicode-ident"
 version = "1.0.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1360,6 +1353,13 @@ name = "winsafe"
 version = "0.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d135d17ab770252ad95e9a872d365cf3090e3be864a34ab46f48555993efc904"
+
+[[package]]
+name = "xtask"
+version = "25.7.18"
+dependencies = [
+ "tuxtile_core",
+]
 
 [[package]]
 name = "zerocopy"

@@ -62,8 +62,6 @@ pub struct AppState {
     multi_select: bool,
     selected_commands: Vec<Rc<ListNode>>,
     drawable: bool,
-    #[cfg(feature = "tips")]
-    tip: &'static str,
     size_bypass: bool,
     skip_confirmation: bool,
     mouse_enabled: bool,
@@ -129,8 +127,6 @@ impl AppState {
             multi_select: false,
             selected_commands: Vec::new(),
             drawable: false,
-            #[cfg(feature = "tips")]
-            tip: crate::tips::get_random_tip(),
             size_bypass: args.size_bypass,
             skip_confirmation: args.skip_confirmation,
             mouse_enabled: args.mouse,
@@ -431,12 +427,6 @@ impl AppState {
             TITLE
         };
 
-        #[cfg(feature = "tips")]
-        let bottom_title = Line::from(format!(" {} ", self.tip))
-            .bold()
-            .blue()
-            .centered();
-        #[cfg(not(feature = "tips"))]
         let bottom_title = "";
 
         let task_list_title = Line::from(" Important Actions ").right_aligned();

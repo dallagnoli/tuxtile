@@ -9,9 +9,6 @@ mod running_command;
 mod state;
 mod theme;
 
-#[cfg(feature = "tips")]
-mod tips;
-
 use crate::cli::Args;
 use clap::Parser;
 use ratatui::{

@@ -18,33 +18,17 @@ check() {
     unset message
 }
 
-findArch() {
-    case "$(uname -m)" in
-        x86_64|amd64) arch="x86_64" ;;
-        aarch64|arm64) arch="aarch64" ;;
-        *) check 1 "Unsupported architecture"
-    esac
-}
-
-getUrl() {
-    case "${arch}" in
-        x86_64) echo "https://github.com/ChrisTitusTech/linutil/releases/latest/download/linutil";;
-        *) echo "https://github.com/ChrisTitusTech/linutil/releases/latest/download/linutil-${arch}";;
-    esac
-}
-
-findArch
 temp_file=$(mktemp)
 check $? "Creating the temporary file"
 
-curl -fsL "$(getUrl)" -o "$temp_file"
-check $? "Downloading linutil"
+curl -fsL "https://github.com/dallagnoli/tuxtile/releases/latest/download/tuxtile" -o "$temp_file"
+check $? "Downloading tuxtile"
 
 chmod +x "$temp_file"
-check $? "Making linutil executable"
+check $? "Making tuxtile executable"
 
 "$temp_file" "$@"
-check $? "Executing linutil"
+check $? "Executing tuxtile"
 
 rm -f "$temp_file"
 check $? "Deleting the temporary file"

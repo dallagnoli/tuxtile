@@ -1,11 +1,14 @@
 [workspace.package]
-license = "MIT"
+name = "tuxtile"
 version = "25.7.18"
-edition = "2021"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/dallagnoli/tuxtile"
+description = "TuxTile is a Linux toolbox designed to automate system setup tasks."
 
 [workspace]
-members = ["tui", "core", "xtask"]
-default-members = ["tui", "core"]
+members = ["core", "ui", "xtask"]
+default-members = ["core", "ui"]
 resolver = "2"
 
 [profile.release]

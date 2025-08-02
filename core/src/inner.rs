@@ -12,7 +12,7 @@ use std::{
 };
 use temp_dir::TempDir;
 
-const TAB_DATA: Dir = include_dir!("$CARGO_MANIFEST_DIR/tabs");
+const TAB_DATA: Dir = include_dir!("$CARGO_MANIFEST_DIR/../scripts");
 
 // Allow the unused TempDir to be stored for later destructor call
 #[allow(dead_code)]

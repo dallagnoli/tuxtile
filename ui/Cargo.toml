@@ -1,19 +1,14 @@
 [package]
-name = "linutil_tui"
-description = "Chris Titus Tech's Linux Toolbox - Linutil is a distro-agnostic toolbox designed to simplify everyday Linux tasks."
-documentation = "https://christitustech.github.io/linutil"
-readme = "../README.md"
-edition = "2021"
-license.workspace = true
-repository = "https://github.com/ChrisTitusTech/linutil/tree/main/tui"
+name = "tuxtile_ui"
 version.workspace = true
-include = ["src/*.rs", "Cargo.toml", "cool_tips.txt", "../man/linutil.1"]
-
-[features]
-default = ["tips"]
-tips = ["rand"]
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description.workspace = true
+include = ["src/**", "Cargo.toml"]
 
 [dependencies]
+tuxtile_core = { path = "../core" }
 clap = { version = "4.5.20", features = ["derive"] }
 oneshot = { version = "0.1.8", features = ["std"], default-features = false }
 portable-pty = "0.8.1"
@@ -22,12 +17,11 @@ tui-term = { version = "0.2.0", default-features = false }
 time = { version = "0.3.36", features = ["formatting", "local-offset", "macros"], default-features = false }
 unicode-width = { version = "0.2.0", default-features = false }
 rand = { version = "0.8.5", optional = true }
-linutil_core = { version = "25.7.18", path = "../core" }
 tree-sitter-highlight = "0.24.4"
 tree-sitter-bash = "0.23.3"
 nix = { version = "0.29.0", features = [ "user" ] }
 vt100-ctt = "0.16.0"
 
 [[bin]]
-name = "linutil"
+name = "tuxtile"
 path = "src/main.rs"

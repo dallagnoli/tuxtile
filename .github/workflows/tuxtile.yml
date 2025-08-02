@@ -17,9 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install musl-tools
-        run: sudo apt-get update && sudo apt-get install musl-tools
-        
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y musl-tools upx
+
       - name: Cache Cargo registry
         uses: actions/cache@v4
         with:
@@ -40,39 +40,29 @@ jobs:
           targets: x86_64-unknown-linux-musl
 
       - name: Install cross-rs for cross-compilation
-        run: cargo install cross
+        run: cargo install cross --locked
 
-      - name: Build x86_64 binary
-        run: cargo build --target-dir=build --release --verbose --target=x86_64-unknown-linux-musl --all-features
-
-      - name: Build aarch64 binary
+      - name: Build x86_64 static binary with musl
         run: |
-          cross build --target-dir=build --release --verbose --target=aarch64-unknown-linux-musl --all-features
-          mv ./build/aarch64-unknown-linux-musl/release/tuxtile ./build/aarch64-unknown-linux-musl/release/tuxtile-aarch64
+          cross build --release --target x86_64-unknown-linux-musl --all-features
+          mkdir -p ./release
+          cp ./target/x86_64-unknown-linux-musl/release/tuxtile ./release/tuxtile
+          strip ./release/tuxtile
+          upx ./release/tuxtile
 
       - name: Extract Version
-        id: extract_version
-        run: |
-          version=$(date +"%Y.%m.%d")
-          echo "version=$version" >> $GITHUB_ENV
-        shell: bash
+        run: echo "VERSION=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
 
       - name: Create and Upload Release
-        id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ env.version }}
-          name: Pre-Release ${{ env.version }}
+          tag_name: ${{ env.VERSION }}
+          name: Pre-Release ${{ env.VERSION }}
           body: |
-            ![GitHub Downloads (specific asset, specific tag)](https://img.shields.io/github/downloads/dallagnoli/tuxtile/${{ env.version }}/tuxtile)
-            ![GitHub Downloads (specific asset, specific tag)](https://img.shields.io/github/downloads/dallagnoli/tuxtile/${{ env.version }}/tuxtile-aarch64)
-
+            ![GitHub Downloads (specific asset, specific tag)](https://img.shields.io/github/downloads/dallagnoli/tuxtile/${{ env.VERSION }}/tuxtile)
           append_body: true
           generate_release_notes: true
           files: |
-            ./build/x86_64-unknown-linux-musl/release/tuxtile
-            ./build/aarch64-unknown-linux-musl/release/tuxtile-aarch64
-          prerelease: true
+            ./release/tuxtile
         env:
-          version: ${{ env.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

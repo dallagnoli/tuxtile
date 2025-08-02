@@ -11,7 +11,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  linutil_build:
+  tuxtile_build:
     runs-on: ubuntu-latest
 
     steps:
@@ -48,7 +48,7 @@ jobs:
       - name: Build aarch64 binary
         run: |
           cross build --target-dir=build --release --verbose --target=aarch64-unknown-linux-musl --all-features
-          mv ./build/aarch64-unknown-linux-musl/release/linutil ./build/aarch64-unknown-linux-musl/release/linutil-aarch64
+          mv ./build/aarch64-unknown-linux-musl/release/tuxtile ./build/aarch64-unknown-linux-musl/release/tuxtile-aarch64
 
       - name: Extract Version
         id: extract_version

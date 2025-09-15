@@ -22,7 +22,7 @@ makeDWM() {
 }
 
 extraDependencies() {
-    sudo pacman -S --noconfirm --needed thunar gvfs pavucontrol flameshot feh dunst picom mate-polkit ttf-meslo-nerd noto-fonts noto-fonts-emoji 
+    sudo pacman -S --noconfirm --needed thunar gvfs flameshot feh dunst picom mate-polkit ttf-meslo-nerd noto-fonts noto-fonts-emoji 
 }
 
 cloneBackgrounds() {
